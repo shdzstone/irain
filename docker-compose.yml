@@ -1,0 +1,111 @@
+version: "3"
+
+networks:   #网络模式:此处应与services平级
+  frontend:
+    driver: ${NETWORKS_DRIVER}
+  backend:
+    driver: ${NETWORKS_DRIVER}
+    
+services:   #构建服务容器
+  
+  ### mysql #####################################################
+  mysql:
+    #构建mysql镜像
+    build:
+      context: docker/mysql
+      dockerfile: Dockerfile #注：此处的dockerfile路径拼接在context下
+      args:
+        - MYSQL_VERSION=${MYSQL_VERSION}
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} #root管理员用户密码
+      - MYSQL_USER=${MYSQL_USER}  #创建test用户
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}  #设置test用户的密码
+      - TZ=Asia/Shanghai    #设置时区
+    ports:
+      - '3306:3306'  #host物理直接映射端口为3306
+    volumes:
+      - "${DATA_PATH_HOST}/mysql/data/db:/var/lib/mysql"  #mysql数据库挂载到host物理机目录
+      - "${DATA_PATH_HOST}/mysql/data/conf:/etc/mysql/conf.d"  #容器的配置目录挂载到host物理机目录
+      - "${DATA_PATH_HOST}/mysql/log:/var/log/mysql"   #mysql日志挂载
+    security_opt:
+      - seccomp:unconfined    #安全策略
+    networks:
+      - backend
+  ### redis #####################################################
+  redis:
+    build:
+      context: docker/redis
+      dockerfile: Dockerfile
+    ports:
+      - 6379:6379
+    volumes:
+      - "${DATA_PATH_HOST}/redis/data:/data"
+    privileged: true  #环境变量
+    environment:
+      - TZ=Asia/Shanghai
+      - LANG=en_US.UTF-8
+  ### backend #####################################################          
+  server:
+    build: 
+      context: ./
+      dockerfile: docker/server/Dockerfile
+    ports:
+      - "8088:8088"
+    depends_on:
+      - "mysql"
+      - "redis"
+    tty: true
+    networks:
+      - backend
+  
+  ### web-admin #####################################################
+  admin:
+    build:
+      context: .
+      dockerfile: ./docker/admin/Dockerfile
+    ports:
+      - "8080:8080"
+    tty: true
+    networks:
+      - frontend
+  
+  ### NGINX Server #########################################
+  nginx:
+    build:
+      context: docker/nginx
+      args:
+        - CHANGE_SOURCE=${CHANGE_SOURCE}
+        - PHP_UPSTREAM_CONTAINER=${NGINX_PHP_UPSTREAM_CONTAINER}
+        - PHP_UPSTREAM_PORT=${NGINX_PHP_UPSTREAM_PORT}
+        - http_proxy
+        - https_proxy
+        - no_proxy
+    volumes:
+      - ${NGINX_HOST_LOG_PATH}:/var/log/nginx
+      - ${NGINX_SITES_PATH}:/etc/nginx/sites-available
+      - ${NGINX_SSL_PATH}:/etc/nginx/ssl
+    ports:
+      - "${NGINX_HOST_HTTP_PORT}:80"
+      - "${NGINX_HOST_HTTPS_PORT}:443"
+      - "81:81"
+    depends_on:
+      - "gogs"
+    networks:
+      - frontend
+      - backend  
+  
+  ### Gogs #####################################################
+  gogs:
+    image: gogs/gogs
+    volumes:
+      - ${DATA_PATH_HOST}/gogs:/data/git/gogs-repositories
+      - ${DATA_PATH_HOST}/gogs/log:/data/gogs/log
+    ports:
+      - "${GOGS_HOST_SSH_PORT}:22"
+      - "${GOGS_HOST_HTTP_PORT}:3000"
+    restart: always
+    depends_on:
+      - mysql
+    networks:
+      - backend

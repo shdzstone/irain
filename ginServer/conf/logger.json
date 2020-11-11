@@ -1,0 +1,7 @@
+{
+  "level": "debug",
+  "filename": "storage/log/admin.log",
+  "maxsize": 200,
+  "max_age": 7,
+  "max_backups": 10
+}
