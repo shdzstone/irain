@@ -138,7 +138,7 @@ type swaggerInfo struct {
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = swaggerInfo{
 	Version:     "0.1",
-	Host:        "127.0.0.1:8088",
+	Host:        "129.211.48.125:8088",
 	BasePath:    "/admin",
 	Schemes:     []string{},
 	Title:       "irain-admin接口文档",
