@@ -22,7 +22,7 @@ import (
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @host 127.0.0.1:8088
+// @host 129.211.48.125/:8088
 // @BasePath /admin
 func main() {
 	//初始化配置
