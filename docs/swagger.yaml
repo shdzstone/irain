@@ -1,5 +1,5 @@
 basePath: /admin
-host: 129.211.48.125:8088
+host: 127.0.0.1:8088
 info:
   contact:
     email: shdzstone@gmail.com
@@ -17,7 +17,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: 后台管理登录接口
+      description: 后台登出接口
       parameters:
       - description: 账号
         in: query
@@ -27,6 +27,11 @@ paths:
       - description: 密码必传
         in: query
         name: password
+        required: true
+        type: string
+      - description: Authorization
+        in: header
+        name: Authorization
         required: true
         type: string
       produces:
@@ -40,9 +45,11 @@ paths:
           description: '{"msg": "who are you"}'
           schema:
             type: string
-      summary: 登录接口
+      security:
+      - ApiKeyAuth: []
+      summary: 登出接口
       tags:
-      - 授权相关接口
+      - 授权
   /register:
     post:
       consumes:
@@ -67,10 +74,15 @@ paths:
           schema:
             type: string
         "400":
-          description: '{"msg": "错误信息","code":2001}'
+          description: '{"msg": "无效的参数","code":2001}'
           schema:
             type: string
       summary: 注册接口
       tags:
-      - 授权相关接口
+      - 授权
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

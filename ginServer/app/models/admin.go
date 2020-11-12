@@ -2,7 +2,6 @@ package models
 
 import (
 	"irain/ginServer/util/dao"
-	"log"
 )
 
 type Admin struct {
@@ -28,14 +27,8 @@ func GetAllAdmin() (adminList []*Admin, err error) {
 
 func GetExistAdmin(acc, pwd string) (admin *Admin, err error) {
 	admin = new(Admin)
-	if dao.DB()==nil {
-		log.Println("xxxxxxxxxxxxx---------------")
-	}
 	if err = dao.DB().Where("account=?", acc).Where("password=?", pwd).First(admin).Error; err != nil {
-		log.Println("xxxxxxxxxxxxxxxxxx err:",err)
 		return nil, err
-	}else {
-		log.Println("YYYYYYYYYYYYYYYYYYYYYY")
 	}
 	
 	return admin, nil

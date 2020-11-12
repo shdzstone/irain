@@ -29,11 +29,6 @@ func Init() error {
 		if err = cfg.Section("mysql").MapTo(MysqlConf); err != nil {
 			return err
 		}
-
-		if ServerConf.Mode == "debug" {
-			log.Println(ServerConf)
-			log.Println(MysqlConf)
-		}
 	}
 
 	//日志配置

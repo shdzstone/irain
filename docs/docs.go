@@ -35,7 +35,12 @@ var doc = `{
     "paths": {
         "/login": {
             "post": {
-                "description": "后台管理登录接口",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "后台登出接口",
                 "consumes": [
                     "application/json"
                 ],
@@ -43,9 +48,9 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "授权相关接口"
+                    "授权"
                 ],
-                "summary": "登录接口",
+                "summary": "登出接口",
                 "parameters": [
                     {
                         "type": "string",
@@ -59,6 +64,13 @@ var doc = `{
                         "description": "密码必传",
                         "name": "password",
                         "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
                         "required": true
                     }
                 ],
@@ -88,7 +100,7 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "授权相关接口"
+                    "授权"
                 ],
                 "summary": "注册接口",
                 "parameters": [
@@ -115,13 +127,20 @@ var doc = `{
                         }
                     },
                     "400": {
-                        "description": "{\"msg\": \"错误信息\",\"code\":2001}",
+                        "description": "{\"msg\": \"无效的参数\",\"code\":2001}",
                         "schema": {
                             "type": "string"
                         }
                     }
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`
@@ -138,7 +157,7 @@ type swaggerInfo struct {
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = swaggerInfo{
 	Version:     "0.1",
-	Host:        "129.211.48.125:8088",
+	Host:        "127.0.0.1:8088",
 	BasePath:    "/admin",
 	Schemes:     []string{},
 	Title:       "irain-admin接口文档",

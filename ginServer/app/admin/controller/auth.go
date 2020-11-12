@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-// @Tags 授权相关接口
+// @Tags 授权
 // @Description 后台注册接口
 // @Summary 注册接口
 // @Accept application/json
@@ -17,7 +17,7 @@ import (
 // @Param account query string true "账号必传"
 // @Param password query string true "密码必传"
 // @Success 200  {string} string "{"msg": "success","code":2000}"
-// @Failure 400 {string} string "{"msg": "错误信息","code":2001}"
+// @Failure 400 {string} string "{"msg": "无效的参数","code":2001}"
 // @Router /register [post]
 func Register(c *gin.Context)  {
 	var admin models.Admin
@@ -39,8 +39,8 @@ func Register(c *gin.Context)  {
 	}
 }
 
-// @Tags 授权相关接口
-// @Description 后台管理登录接口
+// @Tags 授权
+// @Description 后台登录接口
 // @Summary 登录接口
 // @Accept application/json
 // @Produce application/json
@@ -69,12 +69,12 @@ func Login(c *gin.Context)  {
 
 	nodes,err := models.GetAllNode(admin.ID)
 	if err!=nil {
-		resp.Failure(c,2002,"获取节点失败")
+		resp.Failure(c,2003,"获取节点失败")
 	}
 	// 生成Token
 	tokenString, err := jwt.GenToken(admin.Account)
 	if err!=nil {
-		resp.Failure(c,2002,"生成token失败")
+		resp.Failure(c,2004,"生成token失败")
 	}
 
 	// 返回响应
@@ -90,18 +90,27 @@ func Login(c *gin.Context)  {
 	return
 }
 
+// @Tags 授权
+// @Description 后台登出接口
+// @Summary 登出接口
+// @Accept application/json
+// @Produce application/json
+// @Param account query string true "账号"
+// @Param password query string true "密码必传"
+// @Success 200  {string} string "{"msg": "hello Razeen"}"
+// @Failure 400 {string} string "{"msg": "who are you"}"
+// @Router /logout [post]
+// @Security ApiKeyAuth
+// @param Authorization header string true "Authorization"
 func Logout(c *gin.Context)  {
 	log.Println("处理登出请求")
 	account := c.MustGet("account").(string)
 	c.JSON(http.StatusOK, gin.H{
-		"code": 2000,
+		"code": 200,
 		"msg":  "success",
 		"data": gin.H{"msg": "账号"+account+"已退出"},
 	})
 }
 
-//func GetNodes(adminId uint) []models.Node {
-//	
-//}
 
 

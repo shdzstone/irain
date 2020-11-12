@@ -22,8 +22,13 @@ import (
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @host 129.211.48.125:8088
+//129.211.48.125
+// @host 127.0.0.1:8088
 // @BasePath /admin
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
+
 func main() {
 	//初始化配置
 	if err := config.Init(); err != nil {
@@ -36,7 +41,6 @@ func main() {
 		log.Println("migrate logger failed, err:", err)
 		return 
 	}
-
 	
 	//路由配置
 	routers.Include(admin.Routers, blog.Routers)
