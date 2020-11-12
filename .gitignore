@@ -1,6 +1,6 @@
 !.gitkeep
 .DS_Store
-/.env
+.env
 .idea
 *.log
 /storage
