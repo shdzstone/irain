@@ -1,0 +1,76 @@
+basePath: /admin
+host: 129.211.48.125:8088
+info:
+  contact:
+    email: shdzstone@gmail.com
+    name: stone
+    url: http://129.211.48.125:80
+  description: 后台管理文档
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://129.211.48.125:80
+  title: irain-admin接口文档
+  version: "0.1"
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: 后台管理登录接口
+      parameters:
+      - description: 账号
+        in: query
+        name: account
+        required: true
+        type: string
+      - description: 密码必传
+        in: query
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"msg": "hello Razeen"}'
+          schema:
+            type: string
+        "400":
+          description: '{"msg": "who are you"}'
+          schema:
+            type: string
+      summary: 登录接口
+      tags:
+      - 授权相关接口
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: 后台注册接口
+      parameters:
+      - description: 账号必传
+        in: query
+        name: account
+        required: true
+        type: string
+      - description: 密码必传
+        in: query
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"msg": "success","code":2000}'
+          schema:
+            type: string
+        "400":
+          description: '{"msg": "错误信息","code":2001}'
+          schema:
+            type: string
+      summary: 注册接口
+      tags:
+      - 授权相关接口
+swagger: "2.0"

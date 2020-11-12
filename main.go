@@ -10,6 +10,20 @@ import (
 	"log"
 )
 
+// @title irain-admin接口文档
+// @version 0.1
+// @description 后台管理文档
+
+// @contact.name stone
+// @contact.url http://129.211.48.125:80
+// @contact.email shdzstone@gmail.com
+// @termsOfService http://129.211.48.125:80
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host 129.211.48.125:8088
+// @BasePath /admin
 func main() {
 	//初始化配置
 	if err := config.Init(); err != nil {

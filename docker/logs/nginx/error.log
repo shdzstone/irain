@@ -12,3 +12,5 @@
 2020/11/11 06:58:57 [warn] 8#8: server name "http://localhost" has suspicious symbols in /etc/nginx/sites-available/gogs.conf:3
 2020/11/11 07:20:19 [warn] 9#9: server name "http://localhost" has suspicious symbols in /etc/nginx/sites-available/gogs.conf:3
 2020/11/11 09:19:01 [warn] 9#9: server name "http://localhost" has suspicious symbols in /etc/nginx/sites-available/gogs.conf:3
+2020/11/12 01:36:46 [warn] 8#8: server name "http://localhost" has suspicious symbols in /etc/nginx/sites-available/gogs.conf:3
+2020/11/12 01:39:53 [warn] 9#9: server name "http://localhost" has suspicious symbols in /etc/nginx/sites-available/gogs.conf:3

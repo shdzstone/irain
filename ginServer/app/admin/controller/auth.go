@@ -4,36 +4,55 @@ import (
 	"github.com/gin-gonic/gin"
 	"irain/ginServer/app/models"
 	"irain/ginServer/util/jwt"
+	"irain/ginServer/util/resp"
 	"log"
 	"net/http"
 )
 
+// @Tags 授权相关接口
+// @Description 后台注册接口
+// @Summary 注册接口
+// @Accept application/json
+// @Produce application/json
+// @Param account query string true "账号必传"
+// @Param password query string true "密码必传"
+// @Success 200  {string} string "{"msg": "success","code":2000}"
+// @Failure 400 {string} string "{"msg": "错误信息","code":2001}"
+// @Router /register [post]
 func Register(c *gin.Context)  {
 	var admin models.Admin
 	err := c.ShouldBindJSON(&admin)
 	if err!=nil {
-		c.JSON(http.StatusOK, gin.H{
-			"code": 2001,
-			"msg":  "无效的参数",
-		})
+		resp.Failure(c,2001,"无效的参数")
 		return
 	}
 	err = models.CreateAnAdmin(&admin)
 	if err != nil{
-		c.JSON(http.StatusOK, gin.H{"error": err.Error()})
+		resp.Failure(c,2001,err.Error())
 	}else{
 		//c.JSON(http.StatusOK, todo)
-		c.JSON(http.StatusOK, gin.H{
-			"code": 2000,
-			"msg": "success",
-			"data": admin,
+		resp.Success(c,models.RespResult{
+			Code: 2000,
+			Msg: "success",
+			Data: admin,
 		})
 	}
 }
 
+// @Tags 授权相关接口
+// @Description 后台管理登录接口
+// @Summary 登录接口
+// @Accept application/json
+// @Produce application/json
+// @Param account query string true "账号"
+// @Param password query string true "密码必传"
+// @Success 200  {string} string "{"msg": "hello Razeen"}"
+// @Failure 400 {string} string "{"msg": "who are you"}"
+// @Router /login [post]
 func Login(c *gin.Context)  {
 
-	// 用户发送用户名和密码过来
+	// GET请求参数(query string)：/admin/login
+	// 初始化结构体时指定初始参数
 	var user models.Admin
 	err := c.ShouldBindJSON(&user)
 	if err != nil {
@@ -70,6 +89,7 @@ func Login(c *gin.Context)  {
 		})
 	}
 
+	// 返回响应
 	c.JSON(http.StatusOK, gin.H{
 		"code": 2000,
 		"msg":  "success",
