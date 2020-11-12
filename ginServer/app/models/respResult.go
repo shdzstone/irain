@@ -4,5 +4,5 @@ package models
 type RespResult struct {
 	Code int           `json:"code"`    // 业务响应状态码
 	Msg  string        `json:"message"` // 提示信息
-	Data interface{} `json:"data"`    // 数据
+	Data interface{} 	`json:"data"`    // 数据
 }

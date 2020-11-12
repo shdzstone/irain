@@ -56,10 +56,7 @@ func Login(c *gin.Context)  {
 	var user models.Admin
 	err := c.ShouldBindJSON(&user)
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"code": 2001,
-			"msg":  "无效的参数",
-		})
+		resp.Failure(c, 2001, "参数无效")
 		return
 	}
 	
@@ -67,33 +64,24 @@ func Login(c *gin.Context)  {
 	log.Println(c.Request.URL)
 
 	if err!=nil {
-		c.JSON(http.StatusOK, gin.H{
-			"code": 2002,
-			"msg":  "该账号"+user.Account+"没有注册,"+"请注册",
-		})
+		resp.Failure(c,2002,"该账号"+user.Account+"没有注册,"+"请注册")
 	}
 
 	nodes,err := models.GetAllNode(admin.ID)
 	if err!=nil {
-		c.JSON(http.StatusOK, gin.H{
-			"code": 2002,
-			"msg":  "获取节点失败",
-		})
+		resp.Failure(c,2002,"获取节点失败")
 	}
 	// 生成Token
 	tokenString, err := jwt.GenToken(admin.Account)
 	if err!=nil {
-		c.JSON(http.StatusOK, gin.H{
-			"code": 2002,
-			"msg":  "生成token失败",
-		})
+		resp.Failure(c,2002,"生成token失败")
 	}
 
 	// 返回响应
-	c.JSON(http.StatusOK, gin.H{
-		"code": 2000,
-		"msg":  "success",
-		"data": gin.H{
+	resp.Success(c, models.RespResult{
+		Code: 200,
+		Msg:  "success",
+		Data: gin.H{
 			"token": tokenString,
 			"info":admin,
 			"nodes":nodes,
